@@ -29,7 +29,6 @@ export default class CurrencyPairs extends Component {
         //     this.props.currencyStore.getAskPrice
         // );
         this.props.currencyStore.updateCurrentData({ openPrice: openPrice });
-        this.props.currencyStore.calculatePipRange();
         this.props.navigation.goBack(null);
     };
 

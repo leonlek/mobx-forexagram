@@ -44,6 +44,10 @@ export default class HomeScreen extends Component {
         this.props.currencyStore.updateCurrentData({ lotSize: text});
     };
 
+    handleRiskPercentageChangeText = (text) => {
+        console.log('​HomeScreen -> handleRiskPercentageChangeText -> text', text);
+    };
+
     render() {
 
         const { currentData } = this.props.currencyStore;
@@ -51,6 +55,7 @@ export default class HomeScreen extends Component {
         return (
             <Container>
             <StatusBar translucent={false} barStyle='light-content' />
+            <Text>Balance : {currentData.balance}</Text>
             <Text>Port Type : {currentData.portType}</Text>
             <InputWithButton 
                 buttonText={currentData.pair}
@@ -81,6 +86,13 @@ export default class HomeScreen extends Component {
                 editable={true}
                 value={currentData.tp.toString()}
                 onChangeText={this.handleTPChangeText}
+            />
+            <InputWithButton 
+                buttonText={'% Risk'}
+                keyboardType='numeric'
+                editable={true}
+                value={currentData.riskPercentage.toString()}
+                onChangeText={this.handleRiskPercentageChangeText}
             />
             <InputWithButton 
                 buttonText={'Lot Size'}

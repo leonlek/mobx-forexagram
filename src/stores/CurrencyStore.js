@@ -1,4 +1,4 @@
-import { observable, computed, action, autorun, reaction } from 'mobx';
+import { observable, computed, action, reaction } from 'mobx';
 
 import pairs from '../data/pairs';
 import { determineOpenPrice, calculatePipRange, calculatePipValue } from '../utils/utils';
@@ -27,7 +27,7 @@ export default class CurrencyStore {
             pipTPValue: 0,
             lotSize: 0.01,
             balance: 1000,
-            percentRisk: 0.01,
+            riskPercentage: 1,
             portType: INITIAL_PORT_TYPE,
         };
         
