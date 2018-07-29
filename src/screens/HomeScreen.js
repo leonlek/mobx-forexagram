@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Text, StatusBar, KeyboardAvoidingView } from 'react-native';
+import { Text, StatusBar, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 
 import { Container, styles } from '../components/Container';
 import InputWithButton from '../components/TextInput/InputWithButton';
+
+const DimissKeyboard = ({ children }) => (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        {children}    
+    </TouchableWithoutFeedback>
+);
 
 @inject('currencyStore')
 @observer
@@ -55,6 +61,13 @@ export default class HomeScreen extends Component {
         return (
             <Container>
             <StatusBar translucent={false} barStyle='light-content' />
+            <KeyboardAwareScrollView 
+                style={{ backgroundColor: '#4c69a5' }}
+                resetScrollToCoords={{ x: 0, y: 0 }}
+                contentContainerStyle={styles.container}
+                scrollEnabled={true}
+            >
+            <Text>Account Currency : {currentData.accountCurrency}</Text>
             <Text>Balance : {currentData.balance}</Text>
             <Text>Port Type : {currentData.portType}</Text>
             <InputWithButton 
@@ -105,6 +118,7 @@ export default class HomeScreen extends Component {
             <Text>Pip SL value (Base) : {currentData.pipSLValue}</Text>
             <Text>Pip TP range : {currentData.pipTPRange}</Text>
             <Text>Pip TP value (Base) : {currentData.pipTPValue}</Text>
+            </KeyboardAwareScrollView>
             </Container>
         )
     }

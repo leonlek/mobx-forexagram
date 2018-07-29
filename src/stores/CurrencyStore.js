@@ -2,11 +2,14 @@ import { observable, computed, action, reaction } from 'mobx';
 
 import pairs from '../data/pairs';
 import { determineOpenPrice, calculatePipRange, calculatePipValue } from '../utils/utils';
+import { enableLogging } from 'mobx';
 
-
-const INITIAL_PAIR = 'EURUSD';
+const INITIAL_ACCOUNT_CURRENCY = 'USD';
+const INITIAL_PAIR = 'USDJPY';
 const INITIAL_ORDER = 'SELL';
 const INITIAL_PORT_TYPE = 'STANDARD'; //standard, micro, nano
+
+//enableLogging(config);
 
 export default class CurrencyStore {
     
@@ -15,6 +18,7 @@ export default class CurrencyStore {
     
     constructor() {
         this.currentData = {
+            accountCurrency: INITIAL_ACCOUNT_CURRENCY,
             pair: INITIAL_PAIR,
             order: INITIAL_ORDER,
             marketPrice: 0,
@@ -35,6 +39,14 @@ export default class CurrencyStore {
         //this.getCurrencyPairs();
         this.currentData.openPrice = determineOpenPrice(this.currentData.order, this.getBidPrice, this.getAskPrice);
         reaction(
+            () => this.currentData.pair,
+            () => this.calculateOpenPrice()
+        );
+        reaction(
+            () => this.currentData.pair,
+            () => this.updateSLTP()
+        );
+        reaction(
             () => this.currentData.sl,
             () => this.calculatePipRange()
         );
@@ -45,6 +57,10 @@ export default class CurrencyStore {
         reaction(
             () => this.currentData.openPrice,
             () => this.calculatePipRange()
+        );
+        reaction(
+            () => this.currentData.order,
+            () => this.calculateOpenPrice()
         );
         reaction(
             () => this.currentData.pipSLRange,
@@ -58,6 +74,8 @@ export default class CurrencyStore {
             () => this.currentData.lotSize,
             () => this.calculatePipValue()
         );
+        // this.updateCurrentData({ sl: this.currentData.openPrice, tp: this.currentData.openPrice });
+        this.updateSLTP();
     };
 
     @action async getCurrencyPairs() {
@@ -90,7 +108,20 @@ export default class CurrencyStore {
         for (var key in keys) {
             this.currentData[key] = keys[key]
         }
-    }
+    };
+
+    @action updateSLTP() {
+        this.updateCurrentData({ 
+            sl: this.currentData.openPrice,
+            tp: this.currentData.openPrice,
+         })
+    };
+
+    @action calculateOpenPrice() {
+        this.updateCurrentData({
+            openPrice: determineOpenPrice(this.currentData.order, this.getBidPrice, this.getAskPrice)
+        });
+    };
 
     @action calculatePipRange() {
         this.updateCurrentData({ pipSLRange: calculatePipRange(this.currentData.openPrice,
@@ -114,3 +145,7 @@ export default class CurrencyStore {
         });
     };
 }
+
+// enableLogging({
+//     predicate: () => __DEV__ && Boolean(window.navigator.userAgent),
+// });

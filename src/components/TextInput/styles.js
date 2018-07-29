@@ -34,9 +34,17 @@ export default EStyleSheet .create({
         paddingHorizontal: 16,
         color: '$primaryBlue',
     },
+    input: {
+        height: INPUT_HEIGHT,
+        width: 100,
+        fontSize: 18,
+        paddingHorizontal: 8,
+        color: '$inputText',
+        //backgroundColor: 'blue',
+    },
     border: {
         height: INPUT_HEIGHT,
-        width: StyleSheet.hairLineWidth,
+        width: StyleSheet.hairlineWidth,
         backgroundColor: '$border',
     },
 });

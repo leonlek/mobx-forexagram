@@ -1,7 +1,6 @@
 import React from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Provider } from 'mobx-react';
-
 import Navigator from './src/config/routes';
 import stores from './src/stores';
 

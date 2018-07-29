@@ -22,9 +22,11 @@ const InputWithButton = (props) => {
                 onPress={onPress}>
                 <Text style={styles.buttonText}>{buttonText}</Text>    
             </TouchableHighlight>
-            <View style={styles.brder} />
+            <View style={styles.border} />
             <TextInput style={styles.input} 
-                        underlineColorAndroid='transparent' {...props} />
+                        underlineColorAndroid='transparent' {...props} 
+                        clearButtonMode='always'
+            />
         </View>
     );
 };

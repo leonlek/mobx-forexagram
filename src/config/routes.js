@@ -4,6 +4,7 @@ import { StatusBar } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import CurrencyPairs from '../screens/CurrencyPairs';
 import OrderScreen from '../screens/OrderScreen';
+import MainScreen from '../screens/MainScreen';
 
 const HomeStack = createStackNavigator({
     Home: {
@@ -34,7 +35,21 @@ const OrderStack = createStackNavigator({
     }
 });
 
+const MainStack = createStackNavigator({
+    Main: {
+        screen: MainScreen,
+        navigationOptions: {
+            header: () => null,
+        }
+    }
+}, {
+    headerMode: 'screen',
+});
+
 export default createStackNavigator({
+    Main: {
+        screen: MainStack,
+    },
     Home: {
         screen: HomeStack,
     },
@@ -43,7 +58,7 @@ export default createStackNavigator({
     },
     Order: {
         screen: OrderStack,
-    }
+    },
 }, {
     mode: 'modal',
     cardStyle: { paddingTop: StatusBar.currentHeight },
