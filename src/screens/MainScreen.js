@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Container, Header, Body, Content, Icon, Picker, Form, Text, Left, Right, Title, Item, ListItem, Input } from 'native-base';
+import { Container, Header, Body, Content, Icon, Picker, Form, Text, Left, Right, Title, Item, ListItem, Input, Label } from 'native-base';
 import { observer, inject } from 'mobx-react';
+
+import styles from './styles';
 
 const DismissKeyboard = ({ children }) => (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -82,18 +84,17 @@ export default class MainScreen extends Component {
                     <Form>
                         <Text>Pip SL Range: {currentData.pipSLRange} value: {currentData.pipSLValue}</Text>
                         <Text>Pip TP Range: {currentData.pipTPRange} value: {currentData.pipTPValue}</Text>
-                        <ListItem>
-                            <Left><Text>Balance : </Text></Left>
-                            <Body>
-                                <Item regular>
-                                    <Input  placeholder='balance' 
-                                            keyboardType='decimal-pad'
-                                    />
-                                </Item>
-                            </Body>
-                        </ListItem>
-                        <ListItem>
-                            <Left><Text>Account Currency :</Text></Left>
+                        <Item inlineLabel>
+                            <Left><Label>Balance:</Label></Left>
+                            <Right>
+                                <Input  placeholder='balance' 
+                                        keyboardType='decimal-pad'
+                                />
+                            </Right>
+                        </Item>
+                        
+                        <Item>
+                            <Left><Label>Account Currency :</Label></Left>
                             <Right>
                                 <Picker
                                     mode='dropdown'
@@ -108,9 +109,10 @@ export default class MainScreen extends Component {
                                     <Picker.Item label='THB' value='THB'/>
                                 </Picker>
                             </Right>
-                        </ListItem>
-                        <ListItem>
-                            <Left><Text>Currency Pair :</Text></Left>
+                        </Item>
+
+                        <Item>
+                            <Left><Label>Currency Pair :</Label></Left>
                             <Right>
                                 <Picker
                                     mode='dropdown'
@@ -123,20 +125,20 @@ export default class MainScreen extends Component {
                                     {ratesList}
                                 </Picker>
                             </Right>
-                        </ListItem>
-                        <ListItem>
-                            <Left><Text>Open Price : </Text></Left>
-                            <Body>
-                                <Item regular>
-                                    <Input  placeholder='open price' 
-                                            keyboardType='decimal-pad'
-                                            value={currentData.openPrice.toString()}
-                                            onChangeText={(text) => this.handleOpenPriceChangeText(text)}
-                                    />
-                                </Item>
-                            </Body>
-                        </ListItem>
-                        <ListItem>
+                        </Item>
+
+                        <Item>
+                            <Left><Text>Open Price:</Text></Left>
+                            <Right>
+                                <Input  placeholder='open price' 
+                                        keyboardType='decimal-pad'
+                                        value={currentData.openPrice.toString()}
+                                        onChangeText={(text) => this.handleOpenPriceChangeText(text)}
+                                />
+                            </Right>
+                        </Item>
+
+                        <Item>
                             <Left><Text>Market Execution :</Text></Left>
                             <Right>
                                 <Picker
@@ -151,43 +153,38 @@ export default class MainScreen extends Component {
                                     <Picker.Item label='SELL' value='SELL'/>
                                 </Picker>
                             </Right>
-                        </ListItem>
-                        <ListItem>
-                            <Left><Text>SL : </Text></Left>
+                        </Item>
+                        <Item inlineLabel>
+                            <Left><Label>SL :</Label></Left>
+                            <Right>
+                                <Input  placeholder='stop loss' 
+                                        keyboardType='decimal-pad'
+                                        value={currentData.sl.toString()}
+                                        onChangeText={(text) => this.handleSLChangeText(text)}
+                                />
+                            </Right>
+                        </Item>
+                        <Item inlineLabel>
+                            <Left><Label>TP:</Label></Left>
+                            <Right>
+                                <Input  placeholder='take profit' 
+                                        keyboardType='decimal-pad'
+                                        value={currentData.tp.toString()}
+                                        onChangeText={(text) => this.handleTPChangeText(text)}
+                                />
+                            </Right>
+                        </Item>
+
+                        <Item inlineLabel>
+                            <Left><Label>Lot Size:</Label></Left>
                             <Body>
-                                <Item regular>
-                                    <Input  placeholder='stop loss' 
-                                            keyboardType='decimal-pad'
-                                            value={currentData.sl.toString()}
-                                            onChangeText={(text) => this.handleSLChangeText(text)}
-                                    />
-                                </Item>
+                                <Input  placeholder='Lot Size' 
+                                        keyboardType='decimal-pad'
+                                        value={currentData.lotSize.toString()}
+                                        onChangeText={(text) => this.handleLotSizeChangeText(text)}
+                                />
                             </Body>
-                        </ListItem>
-                        <ListItem>
-                            <Left><Text>TP : </Text></Left>
-                            <Body>
-                                <Item regular>
-                                    <Input  placeholder='take profit' 
-                                            keyboardType='decimal-pad'
-                                            value={currentData.tp.toString()}
-                                            onChangeText={(text) => this.handleTPChangeText(text)}
-                                    />
-                                </Item>
-                            </Body>
-                        </ListItem>
-                        <ListItem>
-                            <Left><Text>Lot Size : </Text></Left>
-                            <Body>
-                                <Item regular>
-                                    <Input  placeholder='Lot Size' 
-                                            keyboardType='decimal-pad'
-                                            value={currentData.lotSize.toString()}
-                                            onChangeText={(text) => this.handleLotSizeChangeText(text)}
-                                    />
-                                </Item>
-                            </Body>
-                        </ListItem>
+                        </Item>
                     </Form>
                 </Content>
             </Container>

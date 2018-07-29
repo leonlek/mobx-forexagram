@@ -11,7 +11,7 @@ export function calculatePipRange(openPrice, closePrice) {
     } 
 
     let result = Math.abs(openPrice-closePrice);
-    return (val*result).toFixed(2);
+    return (val*result).toFixed(1);
 };
 
 export function calculatePipValue(portType, openPrice, pipRange, lotSize) {
