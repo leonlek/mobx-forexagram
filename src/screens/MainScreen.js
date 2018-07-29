@@ -80,10 +80,8 @@ export default class MainScreen extends Component {
                 </Header>
                 <Content>
                     <Form>
-                        <Text>Pip SL Range: {currentData.pipSLRange}</Text>
-                        <Text>Pip SL Value: {currentData.pipSLValue}</Text>
-                        <Text>Pip TP Value: {currentData.pipTPRange}</Text>
-                        <Text>Pip TP Value: {currentData.pipTPValue}</Text>
+                        <Text>Pip SL Range: {currentData.pipSLRange} value: {currentData.pipSLValue}</Text>
+                        <Text>Pip TP Range: {currentData.pipTPRange} value: {currentData.pipTPValue}</Text>
                         <ListItem>
                             <Left><Text>Balance : </Text></Left>
                             <Body>
@@ -129,7 +127,7 @@ export default class MainScreen extends Component {
                         <ListItem>
                             <Left><Text>Open Price : </Text></Left>
                             <Body>
-                                <Item>
+                                <Item regular>
                                     <Input  placeholder='open price' 
                                             keyboardType='decimal-pad'
                                             value={currentData.openPrice.toString()}
@@ -157,7 +155,7 @@ export default class MainScreen extends Component {
                         <ListItem>
                             <Left><Text>SL : </Text></Left>
                             <Body>
-                                <Item>
+                                <Item regular>
                                     <Input  placeholder='stop loss' 
                                             keyboardType='decimal-pad'
                                             value={currentData.sl.toString()}
@@ -169,7 +167,7 @@ export default class MainScreen extends Component {
                         <ListItem>
                             <Left><Text>TP : </Text></Left>
                             <Body>
-                                <Item>
+                                <Item regular>
                                     <Input  placeholder='take profit' 
                                             keyboardType='decimal-pad'
                                             value={currentData.tp.toString()}
@@ -181,7 +179,7 @@ export default class MainScreen extends Component {
                         <ListItem>
                             <Left><Text>Lot Size : </Text></Left>
                             <Body>
-                                <Item>
+                                <Item regular>
                                     <Input  placeholder='Lot Size' 
                                             keyboardType='decimal-pad'
                                             value={currentData.lotSize.toString()}

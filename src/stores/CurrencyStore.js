@@ -74,7 +74,6 @@ export default class CurrencyStore {
             () => this.currentData.lotSize,
             () => this.calculatePipValue()
         );
-        // this.updateCurrentData({ sl: this.currentData.openPrice, tp: this.currentData.openPrice });
         this.updateSLTP();
     };
 
