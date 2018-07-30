@@ -1,7 +1,7 @@
 import { observable, computed, action, reaction } from 'mobx';
 
 import pairs from '../data/pairs';
-import { determineOpenPrice, calculatePipRange, calculatePipValue } from '../utils/utils';
+import { determineOpenPrice, calculatePipRange, calculatePipValue, determineLotSize } from '../utils/utils';
 
 import { getCurrencyConverter, USD_BASE } from './api';
 import { PORT_TYPE, ACCOUNT_CURRENCY, CALCULATION_OPTIONS, MARKET_EXECUTION } from '../utils/constants';
@@ -75,6 +75,8 @@ export default class CurrencyStore {
             () => this.calculatePipValue()
         );
         this.updateSLTP();
+
+        determineLotSize('USDJPY');
     };
 
     @computed get getBidPrice() {

@@ -45,6 +45,22 @@ export function determineOpenPrice(order, bid, ask) {
     }
 };
 
+export function determineLotSize(accountCurrnecy, pair) {
+    if (pair === undefined) {
+        return 0;
+        console.log('​pair is undefined');
+    }
+    let arr = Array.from(pair);
+    if (arr.length === 6) {
+        let base = arr[0]+arr[1]+arr[2];
+        let quote = arr[3]+arr[4]+arr[5];
+
+        
+
+        console.log(' -> arr', base + ':' + quote);
+    }
+};
+
 function getCurrnecyDecimalType(number) {
     if (((number*100)%1 === 0) || ((number*1000)%1 === 0)) {
         return 'JPY';
