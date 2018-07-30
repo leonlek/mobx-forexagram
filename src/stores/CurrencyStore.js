@@ -4,11 +4,9 @@ import pairs from '../data/pairs';
 import { determineOpenPrice, calculatePipRange, calculatePipValue } from '../utils/utils';
 
 import { getCurrencyConverter, USD_BASE } from './api';
+import { PORT_TYPE, ACCOUNT_CURRENCY, CALCULATION_OPTIONS, MARKET_EXECUTION } from '../utils/constants';
 
-const INITIAL_ACCOUNT_CURRENCY = 'USD';
 const INITIAL_PAIR = 'USDJPY';
-const INITIAL_ORDER = 'SELL';
-const INITIAL_PORT_TYPE = 'STANDARD'; //standard, micro, nano
 
 export default class CurrencyStore {
     
@@ -17,9 +15,9 @@ export default class CurrencyStore {
     
     constructor() {
         this.currentData = {
-            accountCurrency: INITIAL_ACCOUNT_CURRENCY,
+            accountCurrency: ACCOUNT_CURRENCY.usd,
             pair: INITIAL_PAIR,
-            order: INITIAL_ORDER,
+            order: MARKET_EXECUTION.sell,
             marketPrice: 0,
             openPrice: 0,
             sl: 0,
@@ -31,7 +29,10 @@ export default class CurrencyStore {
             lotSize: 0.01,
             balance: 1000,
             riskPercentage: 1,
-            portType: INITIAL_PORT_TYPE,
+            riskAmount: 0,
+            contractSize: 0,
+            portType: PORT_TYPE.standard,
+            calculationOption: CALCULATION_OPTIONS.riskPercent,
         };
         
         this.rates = pairs;

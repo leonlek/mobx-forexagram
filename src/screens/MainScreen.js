@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Container, Header, Body, Content, Icon, Picker, 
             Form, Text, Left, Right, Title, Item, ListItem, 
-            Input, Label, CardItem, Card
+            Input, Label, CardItem, Card, Button
 } from 'native-base';
 import { observer, inject } from 'mobx-react';
 
 import styles from './styles';
 import { InputNumber } from '../components/InputNumber';
+import { PORT_TYPE, ACCOUNT_CURRENCY, CALCULATION_OPTIONS, MARKET_EXECUTION } from '../utils/constants';
 
 const DismissKeyboard = ({ children }) => (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -41,6 +42,11 @@ export default class MainScreen extends Component {
             order: value
         });
     };
+    handleOptionChange(value) {
+        this.props.currencyStore.updateCurrentData({
+            calculationOption: value
+        });
+    };
 
     // text change
     handleBalanceChangeText(text) {
@@ -63,15 +69,21 @@ export default class MainScreen extends Component {
             tp: text
         });
     };
-    handleLotSizeChangeText(text) {
-        this.props.currencyStore.updateCurrentData({
-            lotSize: text
-        });
+    handleOptionChangeText(text) {
+        if (this.props.currencyStore.currentData.calculationOption === CALCULATION_OPTIONS.riskPercent) {
+            this.props.currencyStore.updateCurrentData({
+                riskPercentage: text
+            });
+        } else if (this.props.currencyStore.currentData.calculationOption === CALCULATION_OPTIONS.lotSize) {
+            this.props.currencyStore.updateCurrentData({
+                lotSize: text
+            });
+        }
     };
-    handleRiskPercentageChangeText(text) {
-        this.props.currencyStore.updateCurrentData({
-            riskPercentage: text
-        });
+
+    //handle onpress
+    handleOnPressCalculate() {
+        console.log('​MainScreen -> handleOnPressCalculate -> handleOnPressCalculate');
     };
 
     render() {
@@ -82,6 +94,14 @@ export default class MainScreen extends Component {
             <Picker.Item key={rate.symbol} label={rate.symbol} value={rate.symbol} />
         ));
 
+        const placeholder = currentData.calculationOption === CALCULATION_OPTIONS.riskPercent ? 'risk percentage' : 'lot size';
+        const value = currentData.calculationOption === CALCULATION_OPTIONS.riskPercent ? currentData.riskPercentage.toString() : currentData.lotSize.toString();
+        const inputOptions = (
+            <InputNumber placehoder={placeholder}   
+                        value={value}
+                        onChangeText={(text) => this.handleOptionChangeText(text)}
+                />
+        );
 
         return (
             <DismissKeyboard>
@@ -115,9 +135,9 @@ export default class MainScreen extends Component {
                                     selectedValue={currentData.accountCurrency}
                                     onValueChange={(value) => this.handleAccountCurrencyChange(value)}
                                 >
-                                    <Picker.Item label='USD' value='USD'/>
-                                    <Picker.Item label='EUR' value='EUR'/>
-                                    <Picker.Item label='THB' value='THB'/>
+                                    <Picker.Item label={ACCOUNT_CURRENCY.usd} value={ACCOUNT_CURRENCY.usd}/>
+                                    <Picker.Item label={ACCOUNT_CURRENCY.eur} value={ACCOUNT_CURRENCY.eur}/>
+                                    <Picker.Item label={ACCOUNT_CURRENCY.thb} value={ACCOUNT_CURRENCY.thb}/>
                                 </Picker>
                             </Right>
                         </Item>
@@ -136,18 +156,6 @@ export default class MainScreen extends Component {
                                 </Picker>
                             </Right>
                         </Item>
-
-                        <Item>
-                            <Label>Open Price :</Label>
-                            <Right>
-                                <InputNumber  placeholder='open price' 
-                                        keyboardType='decimal-pad'
-                                        value={currentData.openPrice.toString()}
-                                        onChangeText={(text) => this.handleOpenPriceChangeText(text)}
-                                />
-                            </Right>
-                        </Item>
-
                         <Item>
                             <Label>Market Execution :</Label>
                             <Right>
@@ -158,9 +166,19 @@ export default class MainScreen extends Component {
                                     selectedValue={currentData.order}
                                     onValueChange={(value) => this.handleMarketExcChange(value)}
                                     >
-                                    <Picker.Item label='BUY' value='BUY'/>
-                                    <Picker.Item label='SELL' value='SELL'/>
+                                    <Picker.Item label={MARKET_EXECUTION.buy} value={MARKET_EXECUTION.buy}/>
+                                    <Picker.Item label={MARKET_EXECUTION.sell} value={MARKET_EXECUTION.sell}/>
                                 </Picker>
+                            </Right>
+                        </Item>
+                        <Item>
+                            <Label>Open Price :</Label>
+                            <Right>
+                                <InputNumber  placeholder='open price' 
+                                        keyboardType='decimal-pad'
+                                        value={currentData.openPrice.toString()}
+                                        onChangeText={(text) => this.handleOpenPriceChangeText(text)}
+                                />
                             </Right>
                         </Item>
                         <Item inlineLabel>
@@ -182,26 +200,32 @@ export default class MainScreen extends Component {
                                 />
                             </Right>
                         </Item>
-
-                        <Item inlineLabel>
-                            <Left><Label>Lot Size :</Label></Left>
-                            <Body>
-                                <InputNumber  placeholder='Lot Size' 
-                                        value={currentData.lotSize.toString()}
-                                        onChangeText={(text) => this.handleLotSizeChangeText(text)}
-                                />
-                            </Body>
+                        <Item>
+                            <Left>
+                                <Picker
+                                    mode='dropdown'
+                                    iosHeader='Options'
+                                    iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
+                                    selectedValue={currentData.calculationOption}
+                                    onValueChange={(value) => this.handleOptionChange(value)}
+                                    >
+                                    <Picker.Item label={CALCULATION_OPTIONS.riskPercent} value={CALCULATION_OPTIONS.riskPercent}/>
+                                    <Picker.Item label={CALCULATION_OPTIONS.lotSize} value={CALCULATION_OPTIONS.lotSize}/>
+                                </Picker>
+                            </Left>
+                            <Right>
+                                {inputOptions}
+                            </Right>
                         </Item>
-                        <Item inlineLabel>
-                            <Left><Label>Risk (%) :</Label></Left>
-                            <Body>
-                                <InputNumber  placeholder='Risk Percentage' 
-                                        value={currentData.riskPercentage.toString()}
-                                        onChangeText={(text) => this.handleRiskPercentageChangeText(text)}
-                                />
-                            </Body>
+                        <Item style={{ borderBottomColor: 'white', marginTop: 10, marginBottom: 10, }}>
+                            <Right>
+                                <Button onPress={()=> this.handleOnPressCalculate()}>
+                                    <Text>Calculate</Text>
+                                </Button>
+                            </Right>
                         </Item>
                     </Form>
+                    
                     <Card>
                         <CardItem header bordered>
                             <Text>Result</Text>
@@ -221,9 +245,6 @@ export default class MainScreen extends Component {
                             <Right>
                             <Text>Your Profit : ${currentData.pipTPValue}</Text>
                             </Right>
-                        </CardItem>
-                        <CardItem>
-                                <Left><Text>Lot Size for {currentData.riskPercentage}% risk => {currentData.lotSize}</Text></Left>
                         </CardItem>
                     </Card>
                 </Content>
