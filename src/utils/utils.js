@@ -11,7 +11,11 @@ export function calculatePipRange(openPrice, closePrice) {
     } 
 
     let result = Math.abs(openPrice-closePrice);
-    return (val*result).toFixed(1);
+    if (isFinite(result)) {
+        return (val*result).toFixed(1);
+    } else {
+        return 0;
+    }
 };
 
 export function calculatePipValue(portType, openPrice, pipRange, lotSize) {
@@ -26,7 +30,11 @@ export function calculatePipValue(portType, openPrice, pipRange, lotSize) {
     let onePip = getCurrnecyDecimalType(openPrice) === 'JPY' ? 0.01 : 0.0001;
     let result = (val*lotSize*onePip/openPrice)*pipRange;
 
-    return result.toFixed(2);
+    if (isFinite(result)) {
+        return result.toFixed(2);
+    } else {
+        return 0;
+    }
 };
 
 export function determineOpenPrice(order, bid, ask) {

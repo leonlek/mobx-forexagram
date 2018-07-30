@@ -2,14 +2,13 @@ import { observable, computed, action, reaction } from 'mobx';
 
 import pairs from '../data/pairs';
 import { determineOpenPrice, calculatePipRange, calculatePipValue } from '../utils/utils';
-import { enableLogging } from 'mobx';
+
+import { getCurrencyConverter, USD_BASE } from './api';
 
 const INITIAL_ACCOUNT_CURRENCY = 'USD';
 const INITIAL_PAIR = 'USDJPY';
 const INITIAL_ORDER = 'SELL';
 const INITIAL_PORT_TYPE = 'STANDARD'; //standard, micro, nano
-
-//enableLogging(config);
 
 export default class CurrencyStore {
     
@@ -77,14 +76,6 @@ export default class CurrencyStore {
         this.updateSLTP();
     };
 
-    @action async getCurrencyPairs() {
-        const res = await fetch('https://forex.1forge.com/1.0.3/quotes?pairs=EURUSD,GBPJPY,AUDUSD&api_key=rvbQUK9PzVfG0QjJYfONcWXSokf78jy2')
-            .then(res => res.json())
-            .catch(err => console.log(err));
-        this.data.rates = res;
-        console.log('pair:', this.data.rates)
-    };
-
     @computed get getBidPrice() {
         return this.rates
                         .filter(item => item.symbol === this.currentData.pair)
@@ -144,7 +135,3 @@ export default class CurrencyStore {
         });
     };
 }
-
-// enableLogging({
-//     predicate: () => __DEV__ && Boolean(window.navigator.userAgent),
-// });

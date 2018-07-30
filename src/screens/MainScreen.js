@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Container, Header, Body, Content, Icon, Picker, Form, Text, Left, Right, Title, Item, ListItem, Input, Label } from 'native-base';
+import { Container, Header, Body, Content, Icon, Picker, 
+            Form, Text, Left, Right, Title, Item, ListItem, 
+            Input, Label, CardItem, Card
+} from 'native-base';
 import { observer, inject } from 'mobx-react';
 
 import styles from './styles';
+import { InputNumber } from '../components/InputNumber';
 
 const DismissKeyboard = ({ children }) => (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -39,12 +43,16 @@ export default class MainScreen extends Component {
     };
 
     // text change
+    handleBalanceChangeText(text) {
+        this.props.currencyStore.updateCurrentData({
+            balance: text
+        });
+    };
     handleOpenPriceChangeText(text) {
         this.props.currencyStore.updateCurrentData({
             openPrice: text
         });
     };
-
     handleSLChangeText(text) {
         this.props.currencyStore.updateCurrentData({
             sl: text
@@ -58,6 +66,11 @@ export default class MainScreen extends Component {
     handleLotSizeChangeText(text) {
         this.props.currencyStore.updateCurrentData({
             lotSize: text
+        });
+    };
+    handleRiskPercentageChangeText(text) {
+        this.props.currencyStore.updateCurrentData({
+            riskPercentage: text
         });
     };
 
@@ -81,29 +94,27 @@ export default class MainScreen extends Component {
                     <Right />
                 </Header>
                 <Content>
-                    <Form>
-                        <Text>Pip SL Range: {currentData.pipSLRange} value: {currentData.pipSLValue}</Text>
-                        <Text>Pip TP Range: {currentData.pipTPRange} value: {currentData.pipTPValue}</Text>
+                        <Form>
                         <Item inlineLabel>
-                            <Left><Label>Balance:</Label></Left>
+                            <Label>Balance :</Label>
                             <Right>
-                                <Input  placeholder='balance' 
-                                        keyboardType='decimal-pad'
+                                <InputNumber    placeholder='balance' 
+                                                value={currentData.balance.toString()}
+                                                onChangeText={(text) => this.handleBalanceChangeText(text)}
                                 />
                             </Right>
                         </Item>
                         
                         <Item>
-                            <Left><Label>Account Currency :</Label></Left>
+                            <Label>Account Currency :</Label>
                             <Right>
                                 <Picker
                                     mode='dropdown'
                                     iosHeader='Account Currency'
-                                    iosIcon={<Icon name='ios-arrow-down-outline' />}
-                                    style={{ width: undefined }}
+                                    iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
                                     selectedValue={currentData.accountCurrency}
                                     onValueChange={(value) => this.handleAccountCurrencyChange(value)}
-                                    >
+                                >
                                     <Picker.Item label='USD' value='USD'/>
                                     <Picker.Item label='EUR' value='EUR'/>
                                     <Picker.Item label='THB' value='THB'/>
@@ -112,13 +123,12 @@ export default class MainScreen extends Component {
                         </Item>
 
                         <Item>
-                            <Left><Label>Currency Pair :</Label></Left>
+                            <Label>Currency Pair :</Label>
                             <Right>
                                 <Picker
                                     mode='dropdown'
                                     iosHeader='Currency Pair'
-                                    iosIcon={<Icon name='ios-arrow-down-outline' />}
-                                    style={{ width: undefined }}
+                                    iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
                                     selectedValue={currentData.pair}
                                     onValueChange={(pair) => this.handleCurrencyPairChange(pair)}
                                     >
@@ -128,9 +138,9 @@ export default class MainScreen extends Component {
                         </Item>
 
                         <Item>
-                            <Left><Text>Open Price:</Text></Left>
+                            <Label>Open Price :</Label>
                             <Right>
-                                <Input  placeholder='open price' 
+                                <InputNumber  placeholder='open price' 
                                         keyboardType='decimal-pad'
                                         value={currentData.openPrice.toString()}
                                         onChangeText={(text) => this.handleOpenPriceChangeText(text)}
@@ -139,13 +149,12 @@ export default class MainScreen extends Component {
                         </Item>
 
                         <Item>
-                            <Left><Text>Market Execution :</Text></Left>
+                            <Label>Market Execution :</Label>
                             <Right>
                                 <Picker
                                     mode='dropdown'
                                     iosHeader='Market Execution'
-                                    iosIcon={<Icon name='ios-arrow-down-outline' />}
-                                    style={{ width: undefined }}
+                                    iosIcon={<Icon name="arrow-dropdown-circle" style={{ color: "#007aff", fontSize: 25 }} />}
                                     selectedValue={currentData.order}
                                     onValueChange={(value) => this.handleMarketExcChange(value)}
                                     >
@@ -155,19 +164,18 @@ export default class MainScreen extends Component {
                             </Right>
                         </Item>
                         <Item inlineLabel>
-                            <Left><Label>SL :</Label></Left>
+                            <Label>SL :</Label>
                             <Right>
-                                <Input  placeholder='stop loss' 
-                                        keyboardType='decimal-pad'
-                                        value={currentData.sl.toString()}
-                                        onChangeText={(text) => this.handleSLChangeText(text)}
+                                <InputNumber    placeholder='stop loss' 
+                                                value={currentData.sl.toString()}
+                                                onChangeText={(text) => this.handleSLChangeText(text)}
                                 />
                             </Right>
                         </Item>
                         <Item inlineLabel>
-                            <Left><Label>TP:</Label></Left>
+                            <Label>TP :</Label>
                             <Right>
-                                <Input  placeholder='take profit' 
+                                <InputNumber  placeholder='take profit' 
                                         keyboardType='decimal-pad'
                                         value={currentData.tp.toString()}
                                         onChangeText={(text) => this.handleTPChangeText(text)}
@@ -176,16 +184,48 @@ export default class MainScreen extends Component {
                         </Item>
 
                         <Item inlineLabel>
-                            <Left><Label>Lot Size:</Label></Left>
+                            <Left><Label>Lot Size :</Label></Left>
                             <Body>
-                                <Input  placeholder='Lot Size' 
-                                        keyboardType='decimal-pad'
+                                <InputNumber  placeholder='Lot Size' 
                                         value={currentData.lotSize.toString()}
                                         onChangeText={(text) => this.handleLotSizeChangeText(text)}
                                 />
                             </Body>
                         </Item>
+                        <Item inlineLabel>
+                            <Left><Label>Risk (%) :</Label></Left>
+                            <Body>
+                                <InputNumber  placeholder='Risk Percentage' 
+                                        value={currentData.riskPercentage.toString()}
+                                        onChangeText={(text) => this.handleRiskPercentageChangeText(text)}
+                                />
+                            </Body>
+                        </Item>
                     </Form>
+                    <Card>
+                        <CardItem header bordered>
+                            <Text>Result</Text>
+                        </CardItem>
+                        <CardItem>
+                            <Left>
+                            <Text>SL (pips) : ${currentData.pipSLRange.toString()}</Text>
+                            </Left>
+                            <Right>
+                            <Text>Your Lost : ${currentData.pipSLValue}</Text>
+                            </Right>
+                        </CardItem>
+                        <CardItem>
+                            <Left>
+                            <Text>TP (pips) : ${currentData.pipTPRange.toString()}</Text>
+                            </Left>
+                            <Right>
+                            <Text>Your Profit : ${currentData.pipTPValue}</Text>
+                            </Right>
+                        </CardItem>
+                        <CardItem>
+                                <Left><Text>Lot Size for {currentData.riskPercentage}% risk => {currentData.lotSize}</Text></Left>
+                        </CardItem>
+                    </Card>
                 </Content>
             </Container>
             </DismissKeyboard>
